@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>paiza bbs</title>
+        <style>body {padding: 10px;}</style>
+    </head>
+    <body>
+        <h1>Hello Django</h1>
+        <p>{{ message }}</p>
+        <p>{{ article.content }}</p>
+        <p><a href='{% url "bbs:index" %}'>一覧</a></p>
+    </body>
+</html>
