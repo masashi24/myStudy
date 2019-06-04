@@ -6,4 +6,6 @@ app_name = 'bbs'
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:id>', views.detail, name='detail'),
+
+    path('scraping', views.scraping, name='scraping')
 ]
