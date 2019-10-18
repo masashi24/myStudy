@@ -2,13 +2,32 @@
 {% block content %}
     <h1>Hello Django</h1>
     <p>{{ message }}</p>
-    {% for article in articles %}
-        <p>
-            {{ article.content }},{{ article.user_name }}
-            <a href='{% url "bbs:detail" article.id %}'>詳細</a>
-        </p>
-    {% endfor %}
+
+    {% if searchForm %}
+        <form action='{% url "bbs:index" %}' method ='get'>
+            <div class='form-group'>
+                {{ searchForm }}
+                <input type='submit' class='btn btn-outline-primary' value='OK'>
+                <a href='{% url "bbs:index" %}' class='btn btn-outline-secondary'>クリア</a>
+            </div>
+        </form>
+    {% endif %}
+
+    <table class='table table-striped table-hover'>
+        {% for article in articles %}
+            <tr>
+                <p>
+                    <td>{{ article.content }}</td>
+                    <td>{{ article.user_name }}</td>
+                    <td>
+                        <a href='{% url "bbs:detail" article.id %}' class='btn btn-outline-primary'>詳細</a>
+                    </td>
+                </p>
+            </tr>
+        {% endfor %}
+    </table>
+
     <p>
-        <a href='{% url "bbs:create" %}'>新規</a>
+        <a href='{% url "bbs:new" %}' class='btn btn-outline-primary'>新規</a>
     </p>
 {% endblock %}

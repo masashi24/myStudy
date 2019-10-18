@@ -4,5 +4,9 @@
     <h1>Hello Django</h1>
     <p>{{ message }}</p>
     <p>{{ article.content }},{{ article.user_name }}</p>
-    <p><a href='{% url "bbs:index" %}'>一覧</a></p>
+    <div>
+        <a href='{% url "bbs:index" %}' class='btn btn-outline-primary'>一覧</a>
+        <a href='{% url "bbs:edit" article.id %}' class='btn btn-outline-primary'>編集</a>
+        <a href='{% url "bbs:delete" article.id %}' class='btn btn-outline-primary'>削除</a>
+    </div>
 {% endblock %}
