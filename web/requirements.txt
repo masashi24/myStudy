@@ -1,6 +1,7 @@
-Django==2.0.4
+Django==2.2.5
 uwsgi==2.0.17
 PyMySQL==0.8.0
 requests
 beautifulsoup4
+django-bootstrap4
 
