@@ -96,4 +96,4 @@ def scraping(request):
         'message': message,
         'racerdata': racerdata,
         }
-    return render(request, 'bbs/scraping.html', context)
+    return render(request, 'bbs/index.html', context)
