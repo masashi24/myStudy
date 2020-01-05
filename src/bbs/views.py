@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from .models import Article
+from .models import Article, Racer
 from .myRequests import sample
 from .forms import SearchForm
-from .forms import ArticleForm
+from .forms import ArticleForm, RacerForm
 
 # Create your views here.
 
@@ -88,9 +88,12 @@ def delete(request, id):
     return render(request, 'bbs/index.html', context)
 
 def scraping(request):
-    #articles = Article.objects.all()
     message = sample.myScraping()
+    racerdata = Racer(victoryRatio = '1')
+    racerdata.save()
+
     context = {
-        'message': message
+        'message': message,
+        'racerdata': racerdata,
         }
-    return render(request, 'bbs/index.html', context)
+    return render(request, 'bbs/scraping.html', context)
