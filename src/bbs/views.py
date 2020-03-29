@@ -4,24 +4,13 @@ from .models import Article, Racer
 from .myRequests import sample
 from .forms import SearchForm
 from .forms import ArticleForm, RacerForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import generic
 
 # Create your views here.
 
-def index(request):
-    searchForm = SearchForm(request.GET)
-    if searchForm.is_valid():
-        keyword = searchForm.cleaned_data['keyword']
-        articles = Article.objects.filter(content__contains=keyword)
-    else:
-        searchForm = SearchForm()
-        articles = Article.objects.all()
-
-    context = {
-        'message': 'Welcome my BBS',
-        'articles': articles,
-        'searchForm': searchForm,
-        }
-    return render(request, 'bbs/index.html', context)
+class IndexView(generic.ListView):
+    model = Article
 
 def detail(request, id):
     article = get_object_or_404(Article, pk=id)
@@ -41,7 +30,7 @@ def new(request):
 
     return render(request, 'bbs/new.html', context)
 
-def create(request):
+def create(LoginRequiredMixin, request):
     if request.method == 'POST':
         articleForm = ArticleForm(request.POST)
         if articleForm.is_valid():
@@ -64,7 +53,7 @@ def edit(request, id):
     }
     return render(request, 'bbs/edit.html', context)
 
-def update(request, id):
+def update(LoginRequiredMixin, request, id):
     if request.method == 'POST':
         article = get_object_or_404(Article, pk=id)
         articleForm = ArticleForm(request.POST, instance=article)
@@ -76,7 +65,7 @@ def update(request, id):
     }
     return render(request, 'bbs/detail.html', context)
 
-def delete(request, id):
+def delete(LoginRequiredMixin, request, id):
     article = get_object_or_404(Article, pk=id)
     article.delete()
 

@@ -21,7 +21,12 @@
                         <a href='{% url "logout" %}' class='logout nav-link'></a>
                     </li>
                 {% else %}
-                    <a href='{% url "login" %}' class='login nav-link'>Login</a>
+                    <li class='nav-item'>
+                        <a href='{% url "login" %}' class='login nav-link'>Login</a>
+                    </li>
+                    <li class='nav-item'>
+                        <a href='{% url "accounts:signup" %}' class='signup nav-link'> Sign up</a>
+                    </li>
                 {% endif %}
             </ul>
         </nav>
