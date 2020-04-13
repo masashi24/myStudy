@@ -6,7 +6,7 @@
     <p>{{ article.content }},{{ article.user_name }}</p>
     <div>
         <a href='{% url "bbs:index" %}' class='btn btn-outline-primary'>一覧</a>
-        <a href='{% url "bbs:edit" article.id %}' class='btn btn-outline-primary'>編集</a>
-        <a href='{% url "bbs:delete" article.id %}' class='btn btn-outline-primary'>削除</a>
+        <a href='{% url "bbs:update" article.pk %}' class='btn btn-outline-primary'>編集</a>
+        <a href='{% url "bbs:delete" article.pk %}' class='btn btn-outline-primary'>削除</a>
     </div>
 {% endblock %}

@@ -6,75 +6,29 @@ from .forms import SearchForm
 from .forms import ArticleForm, RacerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
+from django.urls import reverse_lazy
 
 # Create your views here.
 
 class IndexView(generic.ListView):
     model = Article
 
-def detail(request, id):
-    article = get_object_or_404(Article, pk=id)
-    context = {
-        'message': 'Show Article ' + str(id),
-        'article': article,
-        }
-    return render(request, 'bbs/detail.html', context)
+class DetailView(generic.DetailView):
+    model = Article
 
-def new(request):
-    articleForm = ArticleForm()
+class CreateView(generic.edit.CreateView):
+    model = Article
+    fields = '__all__'
 
-    context = {
-        'message': 'New Article',
-        'articleForm': articleForm,
-    }
+class UpdateView(generic.edit.UpdateView):
+    model = Article
+    fields = '__all__'
 
-    return render(request, 'bbs/new.html', context)
 
-def create(LoginRequiredMixin, request):
-    if request.method == 'POST':
-        articleForm = ArticleForm(request.POST)
-        if articleForm.is_valid():
-            article = articleForm.save()
-    
-    context = {
-        'message': 'Create article' + str(article.id),
-        'article': article
-        }
-    return render(request, 'bbs/detail.html', context)
+class DeleteView(generic.edit.DeleteView):
+    model = Article
+    success_url = reverse_lazy('bbs:index')
 
-def edit(request, id):
-    article = get_object_or_404(Article, pk=id)
-    articleForm = ArticleForm(instance=article)
-
-    context = {
-        'message': 'Edit Article',
-        'article': article,
-        'articleForm': articleForm,
-    }
-    return render(request, 'bbs/edit.html', context)
-
-def update(LoginRequiredMixin, request, id):
-    if request.method == 'POST':
-        article = get_object_or_404(Article, pk=id)
-        articleForm = ArticleForm(request.POST, instance=article)
-        if articleForm.is_valid():
-            articleForm.save()
-    context = {
-        'message': 'Update article ' + str(id),
-        'article': article,
-    }
-    return render(request, 'bbs/detail.html', context)
-
-def delete(LoginRequiredMixin, request, id):
-    article = get_object_or_404(Article, pk=id)
-    article.delete()
-
-    articles = Article.objects.all()
-    context = {
-        'message': 'Deleted article' + str(id),
-        'articles': articles,
-        }
-    return render(request, 'bbs/index.html', context)
 
 def scraping(request):
     message = sample.myScraping()
@@ -100,4 +54,4 @@ def scraping(request):
         'message': message,
         'racerdata': racerdata,
         }
-    return render(request, 'bbs/index.html', context)
+    return render(request, 'bbs/scraping.html', context)

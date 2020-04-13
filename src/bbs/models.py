@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.urls import reverse
 
 # Create your models here.
 class Article(models.Model):
@@ -17,6 +18,9 @@ class Article(models.Model):
 
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse('bbs:detail', kwargs={'pk': self.pk})
 
 class Racer(models.Model):
     victoryRatio = models.CharField(max_length = 10)
