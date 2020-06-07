@@ -29,7 +29,19 @@ class DeleteView(generic.edit.DeleteView):
     model = Article
     success_url = reverse_lazy('bbs:index')
 
+class RacerIndexView(generic.ListView):
+    model = Racer
 
+'''
+class Scraping(generic.edit.CreateView):
+    model = Racer
+    fields = '__all__'
+    template_name = 'scraping.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context
+'''
+#'''
 def scraping(request):
     message = sample.myScraping()
     racerdata = Racer(victoryRatio=str(message["勝率"]), \
@@ -55,3 +67,4 @@ def scraping(request):
         'racerdata': racerdata,
         }
     return render(request, 'bbs/scraping.html', context)
+    #'''

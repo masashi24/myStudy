@@ -10,5 +10,6 @@ urlpatterns = [
     path('<int:pk>/update', views.UpdateView.as_view(), name='update'),
     path('<int:pk>/delete', views.DeleteView.as_view(), name='delete'),
 
+    path('racer', views.RacerIndexView.as_view(), name='racer'),
     path('scraping', views.scraping, name='scraping'),
 ]
