@@ -1,5 +1,5 @@
 from django import forms
-from .models import Article, Racer
+from .models import Article, Racer, Book
 
 class SearchForm(forms.Form):
     keyword = forms.CharField(label='検索', max_length=100)
@@ -13,3 +13,8 @@ class RacerForm(forms.ModelForm):
     class Meta:
         model = Racer
         fields = ('__all__')
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ('title', 'link', 'image')

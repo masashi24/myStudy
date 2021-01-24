@@ -1,0 +1,57 @@
+{% extends './base.html' %}
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/bookList.css' %}">
+
+<div class="container">
+    <div class="jumbotron" style="background:url({% static "3.jpg" %}); background-size:cover;">
+      <h1>ジャンボトロンの基本書式</h1>
+      <p>「ジャンボトロン」とは、元はソニーが開発・製作していた大型映像表示装置の名称。<br>転じて英語圏では、大型表示ディスプレイを指す一般名詞としても使われている。</p>
+      <img src={% static "3.jpg" %} class="rounded-circle" style="width:200px;height:200px">
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="row">
+
+        {% for book in books %}
+        <div class="col-xs-6 col-lg-4">
+            <div class="post">
+                {% if book.image %}
+
+                {% load static %}
+                <div class ="image">
+                    <!--<img src="{{ book.image.url }}" class="rounded-circle" style="width:200px;height:200px"> -->
+                    <img src="{{ book.image.url }}" class="trim-image-to-circle"> 
+                </div>
+                {% endif %}
+                    <div class="date">
+                        {{ book.published_date }}
+                    </div>
+                    <h1><a href="{% url 'bbs:bookDetail' id=book.id %}">{{ book.title }}</a></h1>
+                    <p>{{ book.link|linebreaksbr }}</p>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<!-- {% for book in books %}
+        <div class="post">
+        {% if book.image %}
+        <div class ="image">
+            <img src="{{ book.image.url }}" style="width:300px;height:auto">
+        </div>
+        {% endif %}
+            <div class="date">
+                {{ book.published_date }}
+            </div>
+            <h1><a href="{% url 'bbs:bookDetail' id=book.id %}">{{ book.title }}</a></h1>
+            <p>{{ book.link|linebreaksbr }}</p>
+        </div>
+{% endfor %} -->
+
+{% endblock %}
