@@ -16,8 +16,8 @@
 
 
 
-    <h1>{{ staff.store.name }}店 {{ staff.name }}</h1>
-    <p>{{ start_day }} - {{ end_day }}</p>
+    <!--<h1>{{ staff.store.name }}店 {{ staff.name }}</h1>
+    <p>{{ start_day }} - {{ end_day }}</p> -->
     <table class="table table-bordered text-center" style="table-layout: fixed;width: 100%" border="1">
         <tr>
             <td><a href="{% url 'bbs:bookDetail' staff.pk before.year before.month before.day %}">前週</a></td>
@@ -35,7 +35,7 @@
             <td><a href="{% url 'bbs:bookDetail' staff.pk next.year next.month next.day %}">次週</a></td>
         </tr>
 
-        {% for hour, schedules in calendar.items %}
+        {% for hour, book in calendar.items %}
             <tr style="font-size:12px">
                 <td>
                     {{ hour }}:00

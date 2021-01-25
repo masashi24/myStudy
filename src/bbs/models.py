@@ -51,6 +51,17 @@ class Book(models.Model):
     link = models.CharField(max_length=200)
     published_date = models.DateTimeField(blank=True, null=True)
 
+
+    start = models.DateTimeField('開始時間',null=True)
+    end = models.DateTimeField('終了時間',null=True)
+    name = models.CharField('予約者名', max_length=255,null=True)
+    #staff = models.ForeignKey('Staff', verbose_name='スタッフ', on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        start = timezone.localtime(self.start).strftime('%Y/%m/%d %H:%M:%S')
+        end = timezone.localtime(self.end).strftime('%Y/%m/%d %H:%M:%S')
+        #return f'{self.name} {start} ~ {end} {self.staff}'
+
     def publish(self):
         self.published_date = timezone.now()
         self.save()
