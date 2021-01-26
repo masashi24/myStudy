@@ -1,6 +1,7 @@
 Django
 uwsgi
 mysqlclient
+PyMySQL
 requests
 pillow
 beautifulsoup4
