@@ -151,7 +151,7 @@ class bookDetail(generic.TemplateView):
         # カレンダー表示する最初と最後の日時の間にある予約を取得する
         start_time = datetime.datetime.combine(start_day, datetime.time(hour=9, minute=0, second=0))
         end_time = datetime.datetime.combine(end_day, datetime.time(hour=17, minute=0, second=0))
-        #for schedule in Schedule.objects.filter(staff=staff).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)):
+        #for schedule in Schedule.objects.filter(staff=staff).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)): #exclude:レコードの除外/Q：条件に合うレコードのみまとめる（カプセル化）
         #    local_dt = timezone.localtime(schedule.start)
         #    booking_date = local_dt.date()
         #    booking_hour = local_dt.hour
