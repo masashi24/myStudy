@@ -15,8 +15,12 @@ urlpatterns = [
 
     path('newbook', views.newBook, name='newBook'),
     path('bookList', views.bookList, name='bookList'),
-    path('bookList/<int:id>', views.bookDetail, name='bookDetail'),
+    #path('bookList/<int:id>', views.bookDetail, name='bookDetail'),
+    path('bookList/<int:id>', views.bookDetail.as_view(), name='bookDetail'),
 
     path('store_list', views.StoreList.as_view(), name='store_list'),
     path('store/<int:pk>/staffs/', views.StaffList.as_view(), name='staff_list'),
+
+    #path('staff/<int:pk>/calendar/', views.StaffCalendar.as_view(), name='calendar'),
+    #path('staff/<int:pk>/calendar/<int:year>/<int:month>/<int:day>/', views.StaffCalendar.as_view(), name='calendar'),
 ]

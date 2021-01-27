@@ -61,6 +61,8 @@ class Book(models.Model):
         start = timezone.localtime(self.start).strftime('%Y/%m/%d %H:%M:%S')
         end = timezone.localtime(self.end).strftime('%Y/%m/%d %H:%M:%S')
         #return f'{self.name} {start} ~ {end} {self.staff}'
+        return f'{self.name} {start} ~ {end}'
+
 
     def publish(self):
         self.published_date = timezone.now()
