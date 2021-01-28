@@ -1,7 +1,8 @@
 import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
+from django.db.models import Q
 from .models import Article, Racer, Book
 from .myRequests import sample
 from .forms import SearchForm
@@ -12,7 +13,9 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.shortcuts import redirect
 
-from .models import Store, Staff
+from django.contrib import messages
+
+from .models import Store, Staff, Schedule
 
 
 # Create your views here.
@@ -119,11 +122,13 @@ class bookDetail(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         book = get_object_or_404(Book, pk=self.kwargs['id'])
+        owner = book.owner
         context = {
             'message': 'bbs:book Detail ' + str(self.kwargs['id']),
             'book': book,
         }
         today = datetime.date.today()
+        user = self.request.user
 
         # どの日を基準にカレンダーを表示するかの処理。
         # 年月日の指定があればそれを、なければ今日からの表示。
@@ -142,21 +147,26 @@ class bookDetail(generic.TemplateView):
 
         # 9時から17時まで1時間刻み、1週間分の、値がTrueなカレンダーを作る
         calendar = {}
-        for hour in range(9, 18):
+        for hour in range(8, 18):
             row = {}
             for day in days:
                 row[day] = True
             calendar[hour] = row
 
         # カレンダー表示する最初と最後の日時の間にある予約を取得する
+        scheduleList = []
         start_time = datetime.datetime.combine(start_day, datetime.time(hour=9, minute=0, second=0))
         end_time = datetime.datetime.combine(end_day, datetime.time(hour=17, minute=0, second=0))
-        #for schedule in Schedule.objects.filter(staff=staff).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)): #exclude:レコードの除外/Q：条件に合うレコードのみまとめる（カプセル化）
-        #    local_dt = timezone.localtime(schedule.start)
-        #    booking_date = local_dt.date()
-        #    booking_hour = local_dt.hour
-        #    if booking_hour in calendar and booking_date in calendar[booking_hour]:
-        #        calendar[booking_hour][booking_date] = False
+        for schedule in Schedule.objects.filter(target=owner).exclude(Q(start__gt=end_time) | Q(end__lt=start_time)): #exclude:レコードの除外/Q：条件に合うレコードのみまとめる（カプセル化）
+            local_dt = timezone.localtime(schedule.start)
+            booking_date = local_dt.date()
+            booking_hour = local_dt.hour
+            scheduleList.append(schedule)
+            scheduleList.append(local_dt)
+            scheduleList.append(booking_date)
+            scheduleList.append(booking_hour)
+            if booking_hour in calendar and booking_date in calendar[booking_hour]:
+                calendar[booking_hour][booking_date] = False
 
         #context['staff'] = staff
         context['calendar'] = calendar
@@ -166,6 +176,8 @@ class bookDetail(generic.TemplateView):
         context['before'] = days[0] - datetime.timedelta(days=7)
         context['next'] = days[-1] + datetime.timedelta(days=1)
         context['today'] = today
+        context['user'] = user
+        context['scheduleList'] = scheduleList
         #context['public_holidays'] = settings.PUBLIC_HOLIDAYS
         return context #'''
 
@@ -194,6 +206,40 @@ class StaffList(generic.ListView):
 
 
 
+class Booking(generic.CreateView):
+    model = Schedule
+    fields = ('name',)
+    template_name = 'bbs/booking.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #context['staff'] = get_object_or_404(Staff, pk=self.kwargs['pk'])
+        #book = get_object_or_404(Book, pk=self.kwargs['id'])
+        return context
+
+    def form_valid(self, form):
+        #staff = get_object_or_404(Staff, pk=self.kwargs['pk'])
+        book = get_object_or_404(Book, pk=self.kwargs['id'])
+        target = book.owner
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        day = self.kwargs.get('day')
+        hour = self.kwargs.get('hour')
+        start = datetime.datetime(year=year, month=month, day=day, hour=hour)
+        end = datetime.datetime(year=year, month=month, day=day, hour=hour + 1)
+        if Schedule.objects.filter(target=book.owner, start=start).exists():
+            messages.error(self.request, 'すみません、入れ違いで予約がありました。別の日時はどうですか。')
+        else:
+            schedule = form.save(commit=False)
+            #schedule.staff = staff
+            schedule.start = start
+            schedule.end = end
+            schedule.target = target
+            schedule.save()
+        return redirect('bbs:bookList', pk=book.id, year=year, month=month, day=day)
+
+
+'''
 class StaffCalendar(generic.TemplateView):
     template_name = 'booking/calendar.html'
 

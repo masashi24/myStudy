@@ -18,12 +18,12 @@
     
     <!--<h1>{{ staff.store.name }}店 {{ staff.name }}</h1>-->
     <p>{{ start_day }} - {{ end_day }}</p> 
-    <h1>{{calendar}}</h1>
-    <table class="table table-bordered text-center" style="table-layout: fixed;width: 100%" border="1">
-        <tr>
-            {% comment %}
-            <td><a href="{% url 'bbs:bookDetail' staff.pk before.year before.month before.day %}">前週</a></td>
-            {% endcomment %}
+    <p>{{ calendar }}</p> 
+    <p>{{ scheduleList }}</p>
+    <p>{{ user }}</p>
+    <table class="table table-bordered text-center" style="table-layout: fixed;width: 100%" border="3" bordercolor="#000000">
+        <tr bgcolor="#e5ccff">
+            <td><a href="{% url 'bbs:bookDetail' book.id before.year before.month before.day %}">前週</a></td>
             {% for day in days %}
                 {% if day in public_holidays %}
                     <th style="background-color: yellow">{{ day | date:"d(D)" }}</th>
@@ -35,22 +35,20 @@
                     <th>{{ day | date:"d(D)" }}</th>
                 {% endif %}
             {% endfor %}
-            {% comment %}
-            <td><a href="{% url 'bbs:bookDetail' staff.pk next.year next.month next.day %}">次週</a></td>
-            {% endcomment %}
+            <td><a href="{% url 'bbs:bookDetail' book.id next.year next.month next.day %}">次週</a></td>
         </tr>
 
         {% for hour, book in calendar.items %}
-            <tr style="font-size:12px">
+            <tr bgcolor="#ffff99" style="font-size:18px">
                 <td>
                     {{ hour }}:00
                 </td>
-                {% for dt, book in schedules.items %}
+                {% for dt, book in book.items %}
                     <td>
                         {% if dt <= today %}
                             -
                         {% elif book %}
-                            <a href="">○</a>
+                            <a href="{% url 'bbs:booking' staff.pk dt.year dt.month dt.day hour %}">○</a>
                         {% else %}
                             ×
                         {% endif %}

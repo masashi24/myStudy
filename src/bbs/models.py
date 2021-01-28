@@ -50,25 +50,18 @@ class Book(models.Model):
     title = models.CharField(max_length=32)
     link = models.CharField(max_length=200)
     published_date = models.DateTimeField(blank=True, null=True)
-
-
-    start = models.DateTimeField('開始時間',null=True)
-    end = models.DateTimeField('終了時間',null=True)
-    name = models.CharField('予約者名', max_length=255,null=True)
-    #staff = models.ForeignKey('Staff', verbose_name='スタッフ', on_delete=models.CASCADE,null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
-        start = timezone.localtime(self.start).strftime('%Y/%m/%d %H:%M:%S')
-        end = timezone.localtime(self.end).strftime('%Y/%m/%d %H:%M:%S')
+        #start = timezone.localtime(self.start).strftime('%Y/%m/%d %H:%M:%S')
+        #end = timezone.localtime(self.end).strftime('%Y/%m/%d %H:%M:%S')
         #return f'{self.name} {start} ~ {end} {self.staff}'
-        return f'{self.name} {start} ~ {end}'
+        return f'{self.owner}'
 
 
     def publish(self):
         self.published_date = timezone.now()
         self.save()
-
-
 
 
 class Store(models.Model):
@@ -99,9 +92,10 @@ class Schedule(models.Model):
     start = models.DateTimeField('開始時間')
     end = models.DateTimeField('終了時間')
     name = models.CharField('予約者名', max_length=255)
-    staff = models.ForeignKey('Staff', verbose_name='スタッフ', on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    target = models.ForeignKey(Book.owner, on_delete=models.CASCADE, null = True)
 
     def __str__(self):
         start = timezone.localtime(self.start).strftime('%Y/%m/%d %H:%M:%S')
         end = timezone.localtime(self.end).strftime('%Y/%m/%d %H:%M:%S')
-        return f'{self.name} {start} ~ {end} {self.staff}'
+        return f'{self.name} {start} ~ {end}'
