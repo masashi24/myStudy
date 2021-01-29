@@ -93,7 +93,7 @@ class Schedule(models.Model):
     end = models.DateTimeField('終了時間')
     name = models.CharField('予約者名', max_length=255)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
-    target = models.ForeignKey(Book.owner, on_delete=models.CASCADE, null = True)
+    target = models.ForeignKey(Book, on_delete=models.CASCADE, null = True)
 
     def __str__(self):
         start = timezone.localtime(self.start).strftime('%Y/%m/%d %H:%M:%S')

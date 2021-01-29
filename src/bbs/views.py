@@ -18,6 +18,33 @@ from django.contrib import messages
 from .models import Store, Staff, Schedule
 
 
+import logging
+import coloredlogs
+
+coloredlogs.CAN_USE_BOLD_FONT = True
+coloredlogs.DEFAULT_FIELD_STYLES = {'asctime': {'color': 'green'},
+                                    'hostname': {'color': 'magenta'},
+                                    'levelname': {'color': 'black', 'bold': True},
+                                    'name': {'color': 'blue'},
+                                    'programname': {'color': 'cyan'}
+                                    }
+coloredlogs.DEFAULT_LEVEL_STYLES = {'critical': {'color': 'red', 'bold': True},
+                                    'error': {'color': 'red'},
+                                    'warning': {'color': 'yellow'},
+                                    'notice': {'color': 'magenta'},
+                                    'info': {},
+                                    'debug': {'color': 'green'},
+                                    'spam': {'color': 'green', 'faint': True},
+                                    'success': {'color': 'green', 'bold': True},
+                                    'verbose': {'color': 'blue'}
+                                    }
+
+logger = logging.getLogger(__file__)
+coloredlogs.install(level='INFO', logger=logger, fmt='%(asctime)s : %(message)s', datefmt='%Y/%m/%d %H:%M:%S')
+handler = logging.FileHandler('output.log', 'w', 'utf-8')
+handler.setFormatter(logging.Formatter('%(asctime)s : %(levelname)s : %(message)s', datefmt='%Y/%m/%d %H:%M:%S'))
+logger.addHandler(handler)
+
 # Create your views here.
 
 class IndexView(generic.ListView):
@@ -97,6 +124,12 @@ def newBook(request):
     return render(request, 'bbs/new.html', {'form': form})
 
 def bookList(request):
+    # コンソールにデバッグメッセージを出力する
+    logging.debug('debug message')
+    logger.error("This is ERROR!")
+    logger.warning("This is WARNING.")
+    logger.info("This is INFO.")
+    logger.debug("This is DEBUG..")  # Not Printed
     form = BookForm(request)
     book = Book.objects.order_by('published_date').reverse()
 
